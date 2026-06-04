@@ -3,14 +3,21 @@
 #include <vector>
 #include "circle.hpp"
 #include "display.hpp"
+#include "objects.hpp"
+#include <chrono>
+#include <thread>
 
 class Game
 {
     Display display;
-    std::vector<Circle> circles;
+    Objects<Circle> objects;
 
 public:
-    Game(int width, int height) : display(Display(width, height)) { circles.emplace_back(600, 400, 100); }
+    Game(int width, int height) : display(width, height) {}
+
+    void initialize_game() {
+        objects.add_object(Circle(600, 400, 100)); 
+    }
 
     void loop()
     {
@@ -21,16 +28,20 @@ public:
         while (isRunning)
         {
 
+            
             while (SDL_PollEvent(&event))
             {
                 if (event.type == SDL_QUIT)
                 {
                     isRunning = false;
                 }
-                display.draw_background();
-                display.draw_circle(circles.front());
-                display.draw_changes();
             }
+            auto frame_start = std::chrono::steady_clock::now();
+            objects.move();
+            display.draw_background();
+            display.draw_objects(objects);
+            display.draw_changes();
+            std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(250));
         }
     }
 };

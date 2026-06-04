@@ -5,7 +5,7 @@
 int main(int argc, char *args[])
 {
     Game game(1920, 1080);
+    game.initialize_game();
     game.loop();
-
     return 0;
 }

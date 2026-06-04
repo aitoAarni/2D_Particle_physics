@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "circle.hpp"
+#include "objects.hpp"
 
 class Display
 {
@@ -25,9 +26,15 @@ public:
         SDL_RenderClear(renderer);
     } 
 
-    void draw_circle(Circle& circle) {
+    void draw_circle(const Circle& circle) {
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
         fill_circle(renderer, circle);
+    }
+
+    void draw_objects(Objects<Circle>& objects) {
+        for (const auto& circle : objects.get_objects()) {
+            draw_circle(circle);
+        }
     }
 
         // swap buffers to push the frame to the monitor

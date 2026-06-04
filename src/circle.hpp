@@ -3,18 +3,31 @@
 #include <SDL2/SDL.h>
 #include <cmath>
 #include <iostream>
+#include <iostream>
 #include <format>
-// #include <algorithm>
+
+struct Velocity {
+    int x;
+    int y;
+};
 
 class Circle {
+    Velocity velocity;
     public:
     int x;
     int y;
     int radius;
-    Circle(int x_initial, int y_initial, int r) : x(x_initial), y(y_initial), radius(r) {}
+
+    Circle(int x_initial, int y_initial, int r, int x_vel = 5, int y_vel = 5) : x(x_initial), y(y_initial), radius(r), velocity(x_vel, y_vel) {}
+    
+    void move() {
+        x += velocity.x;
+        y += velocity.y;
+        std::cout << "new pos: " << x << ", " << y << "\n";
+    }
 };
 
-void fill_circle(SDL_Renderer* renderer, Circle& circle) {
+void fill_circle(SDL_Renderer* renderer, const Circle& circle) {
     int r_pow_2 = circle.radius * circle.radius;
     int x_pow_2 = circle.x*circle.x;
     int y_pow_2 = circle.y*circle.y;
