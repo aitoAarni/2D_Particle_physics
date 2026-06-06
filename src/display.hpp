@@ -41,6 +41,8 @@ public:
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_RenderDrawLine(renderer, 550, 0, 550, 1080);
     }
 
     void draw_circle(const Circle &circle)

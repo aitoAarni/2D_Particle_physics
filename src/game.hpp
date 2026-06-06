@@ -18,18 +18,18 @@ public:
 
     void initialize_game()
     {
-        circles.add_circle(Circle(2, 2, 1, -2, 0, 2));
-        circles.add_circle(Circle(0, 0, 1, 0, 1, 2));
-        std::cout << "closing vel: " << closing_velocity(circles[0], circles[1]) << "\n";
+        circles.add_circle(Circle(2000, 500, 50, -3, 0, 2));
+        circles.add_circle(Circle(500, 1000, 50, 0, -1, 2));
         }
 
-    void update_collisions()
+    void handle_collisions()
     {
         for (int a_index = 0; a_index <= circles.get_circles().size(); a_index++)
         {
             for (int b_index = a_index + 1; b_index <= circles.get_circles().size(); b_index++)
             {
-                collision_detection(circles[a_index], circles[b_index]);
+                if (collision_detection(circles[a_index], circles[b_index]))
+                    resolve_collision(circles[a_index], circles[b_index]);
             }
         }
     }
@@ -51,11 +51,11 @@ public:
             }
             auto frame_start = std::chrono::steady_clock::now();
             circles.move();
-            update_collisions();
+            handle_collisions();
             display.draw_background();
             display.draw_circles(circles);
             display.draw_changes();
-            std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(250));
+            std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(7));
         }
     }
 };

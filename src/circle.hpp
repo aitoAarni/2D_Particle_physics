@@ -22,7 +22,6 @@ public:
     {
         x += velocity.x;
         y += velocity.y;
-        std::cout << "new pos: " << x << ", " << y << "\n";
     }
     float get_x() const
     {
@@ -30,7 +29,7 @@ public:
     }
     float get_y() const
     {
-        return x;
+        return y;
     }
     float get_radius() const
     {
@@ -62,6 +61,7 @@ public:
     }
     void set_velocity(Vector vel)
     {
+        std::cout << "old vel: " << velocity << ", new_vel: " << vel << "\n";
         velocity = vel;
     }
 };

@@ -5,17 +5,58 @@
 
 Vector contact_normal(Circle &a, Circle &b)
 {
+    // calculate a direction between circles' centres
     float y{b.get_y() - a.get_y()};
     float x{b.get_x() - a.get_x()};
     float dist{std::hypot(x, y)};
     return {x / dist, y / dist};
 }
 
-float closing_velocity(Circle &a, Circle &b)
+float closing_velocity(Circle &a, Circle &b, Vector &contact_norm_vec)
 {
-    auto velocity_delta =  a.get_velocity() - b.get_velocity();
+    // (V_a - V_b) * contact_normal
+    auto velocity_delta = a.get_velocity() - b.get_velocity();
     std::cout << "velocity_delta: " << velocity_delta << "\n";
-    auto contact_norm_vec = contact_normal(a, b);
     std::cout << "contact_norm_vec: " << contact_norm_vec << "\n";
     return velocity_delta * contact_norm_vec;
+}
+
+float change_in_velocity(float velocity_before, float c)
+{
+    return -velocity_before * (1 + c);
+}
+
+float scalar_impulse(float velocity_change, float mass_a, float mass_b)
+{
+    return velocity_change / (1 / mass_a + 1 / mass_b);
+}
+
+Vector calc_impulse_vector(Vector &contact_normal, float scalar_impulse)
+{
+    return contact_normal * scalar_impulse;
+}
+
+void apply_impulse_to_velocity(Circle &circle, Vector &impulse_vector, bool reverse_direction = false)
+{
+    if (reverse_direction)
+        impulse_vector = -impulse_vector;
+    auto impulse_divided_by_mass =  (impulse_vector * (1 / circle.get_weight()));
+    auto resolution_velocity = circle.get_velocity() + impulse_divided_by_mass;
+    std::cout << "new_velocity: " << resolution_velocity << "\n";
+    circle.set_velocity(resolution_velocity);
+}
+
+void resolve_collision(Circle &a, Circle &b)
+{
+    // coefficient of restitution
+    float c = 1;
+    auto contact_normal_vec = contact_normal(a, b);
+    auto closing_vel = closing_velocity(a, b, contact_normal_vec);
+    auto velocity_change = change_in_velocity(closing_vel, c);
+    float impulse_strength = scalar_impulse(velocity_change, a.get_weight(), b.get_weight());
+    std::cout << "impulse strength: " << impulse_strength << "\n";
+    auto impulse_vector = calc_impulse_vector(contact_normal_vec, impulse_strength);
+    std::cout << "impulse_vector: " << impulse_vector << "\n";
+    apply_impulse_to_velocity(a, impulse_vector);
+    apply_impulse_to_velocity(b, impulse_vector, true);
 }
