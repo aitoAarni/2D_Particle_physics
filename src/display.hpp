@@ -1,8 +1,24 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <cmath>
 #include "circle.hpp"
-#include "objects.hpp"
+
+void fill_circle(SDL_Renderer *renderer, const Circle &circle)
+{
+    float r_pow_2{circle.get_radius() * circle.get_radius()};
+    float x_pow_2{circle.get_x() * circle.get_x()};
+    float y_pow_2 = {circle.get_y() * circle.get_y()};
+    float b{2 * circle.get_x()};
+    float b_pow_2{b * b};
+    for (int y{static_cast<int>(std::round(circle.get_y() - circle.get_radius()))}; y <= circle.get_y() + circle.get_radius(); y++)
+    {
+        int c = x_pow_2 + (circle.get_y() - y) * (circle.get_y() - y) - r_pow_2;
+        int x_0 = b + std::sqrt(b_pow_2 - 4 * c);
+        int x_1 = b - std::sqrt(b_pow_2 - 4 * c);
+        SDL_RenderDrawLine(renderer, std::lround(std::min(x_0, x_1) / 2), y, std::lround(std::max(x_0, x_1) / 2), y);
+    }
+}
 
 class Display
 {
@@ -20,25 +36,30 @@ public:
         SDL_Quit();
     }
 
-    void draw_background() {
+    void draw_background()
+    {
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-    } 
+    }
 
-    void draw_circle(const Circle& circle) {
+    void draw_circle(const Circle &circle)
+    {
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
         fill_circle(renderer, circle);
     }
 
-    void draw_objects(Objects<Circle>& objects) {
-        for (const auto& circle : objects.get_objects()) {
+    void draw_circles(Circles &circles)
+    {
+        for (const auto &circle : circles.get_circles())
+        {
             draw_circle(circle);
         }
     }
 
-        // swap buffers to push the frame to the monitor
-    void draw_changes() {
+    // swap buffers to push the frame to the monitor
+    void draw_changes()
+    {
         SDL_RenderPresent(renderer);
     }
 
@@ -52,7 +73,7 @@ public:
         }
 
         window = SDL_CreateWindow(
-            "C++ Physics Sandbox",
+            "C++ Physics Sandbo",
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
             width, height,
             SDL_WINDOW_SHOWN);
