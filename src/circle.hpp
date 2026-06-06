@@ -8,7 +8,7 @@
 
 class Circle
 {
-    Velocity velocity;
+    Vector velocity;
     float weight;
     float x;
     float y;
@@ -40,6 +40,10 @@ public:
     {
         return weight;
     }
+    Vector &get_velocity()
+    {
+        return velocity;
+    }
     void set_y(float new_y)
     {
         y = new_y;
@@ -55,6 +59,10 @@ public:
     void set_weight(float w)
     {
         weight = w;
+    }
+    void set_velocity(Vector vel)
+    {
+        velocity = vel;
     }
 };
 

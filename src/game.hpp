@@ -6,6 +6,7 @@
 #include <chrono>
 #include <thread>
 #include "collision_detection.hpp"
+#include "collision_resolver.hpp"
 
 class Game
 {
@@ -17,9 +18,10 @@ public:
 
     void initialize_game()
     {
-        circles.add_circle(Circle(600, 400, 100));
-        circles.add_circle(Circle(1000, 400, 50, -5, 5));
-    }
+        circles.add_circle(Circle(2, 2, 1, -2, 0, 2));
+        circles.add_circle(Circle(0, 0, 1, 0, 1, 2));
+        std::cout << "closing vel: " << closing_velocity(circles[0], circles[1]) << "\n";
+        }
 
     void update_collisions()
     {
