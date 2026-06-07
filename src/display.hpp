@@ -3,6 +3,9 @@
 #include <iostream>
 #include <cmath>
 #include "circle.hpp"
+#include <chrono>
+#include <thread>
+#include <atomic>
 
 void fill_circle(SDL_Renderer *renderer, const Circle &circle)
 {
@@ -28,12 +31,24 @@ class Display
     SDL_Renderer *renderer = nullptr;
 
 public:
-    Display(int w, int h) : width(w), height(h) {}
+    Display(WindowSize& window_size) : width(window_size.width), height(window_size.height) {}
     ~Display()
     {
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         SDL_Quit();
+    }
+
+    void display_loop(int fps = 144, Circles& circles, std::atomic<bool>& is_running)
+    {
+        std::chrono::microseconds frame_time{1'000'000 / fps};
+        while (is_running.load(std::memory_order_relaxed)) {
+            auto frame_start = std::chrono::steady_clock().now();
+            draw_background();
+            draw_circles(circles);
+            draw_changes();
+            std::this_thread::sleep_until(frame_start + frame_time);
+        }
     }
 
     void draw_background()

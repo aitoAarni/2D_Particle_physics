@@ -5,17 +5,17 @@
 #include "display.hpp"
 #include <chrono>
 #include <thread>
+#include <atomic>
 #include "collision_detection.hpp"
 #include "collision_resolver.hpp"
 
-class Game
+class PhysicsEngine
 {
-    Display display;
     WindowSize window_size;
     Circles circles;
 
 public:
-    Game(int width, int height) : display(width, height), window_size(width, height) {}
+    PhysicsEngine(WindowSize& window_s) : window_size(window_s) {}
 
     void initialize_game()
     {
@@ -62,28 +62,23 @@ public:
         }
     }
 
-    void loop()
+    void loop(int tick_rate, std::atomic<bool>& is_running)
     {
-        display.initialize();
-        bool isRunning = true;
         SDL_Event event;
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
-        while (isRunning)
+        while (is_running)
         {
 
             while (SDL_PollEvent(&event))
             {
                 if (event.type == SDL_QUIT)
                 {
-                    isRunning = false;
+                    is_running = false;
                 }
             }
             auto frame_start = std::chrono::steady_clock::now();
             circles.move();
             handle_collisions();
-            display.draw_background();
-            display.draw_circles(circles);
-            display.draw_changes();
             std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(3));
         }
     }
