@@ -112,15 +112,13 @@ void resolve_interpenetration(Circle &circle, WindowSize &window, Direction &wal
     Vector contact_normal = border_contact_normal(wall_direction);
     float p_depth = penetration_depth(circle, window, wall_direction);
     Vector move_vector = -contact_normal * p_depth;
-    std::cout << "before pen resolution: " << circle.get_position() << "\n";
     circle.move(move_vector.x, move_vector.y);
-    std::cout << "after pen resolution: " << circle.get_position() << "\n";
 }
 
 void resolve_collision(Circle &a, Circle &b)
 {
     // coefficient of restitution
-    float c = 1;
+    float c = 0.98;
     auto contact_normal_vec = contact_normal(a, b);
     auto closing_vel = closing_velocity(a, b, contact_normal_vec);
     auto velocity_change = change_in_velocity(closing_vel, c);
@@ -133,7 +131,7 @@ void resolve_collision(Circle &a, Circle &b)
 
 void resolve_border_collision(Circle &circle, Direction &border_direction, WindowSize &window)
 {
-    float c = 1;
+    float c = 1.02;
     Object border;
     Vector contact_normal_vec = border_contact_normal(border_direction);
     float closing_vel = closing_velocity(circle, border, contact_normal_vec);
