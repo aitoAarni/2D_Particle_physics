@@ -37,7 +37,6 @@ float closing_velocity(Object &a, Object &b, Vector &contact_norm_vec)
     return velocity_delta * contact_norm_vec;
 }
 
-
 float change_in_velocity(float velocity_before, float c)
 {
     return -velocity_before * (1 + c);
@@ -85,11 +84,34 @@ float penetration_depth(Circle &circle, WindowSize &window, Direction &wall_dire
     }
 }
 
+float penetration_depth(Circle &a, Circle &b)
+{
+    float y{b.get_y() - a.get_y()};
+    float x{b.get_x() - a.get_x()};
+    float circle_centre_dist{std::hypot(x, y)};
+    return a.get_radius() + b.get_radius() - circle_centre_dist;
+}
+
+Vector undo_penetration_vec(float mass_a, float mass_b, float penetration_depth, Vector contact_normal)
+{
+    return contact_normal * (mass_b / (mass_a + mass_b) * penetration_depth);
+}
+
+void resolve_interpenetration(Circle &a, Circle &b)
+{
+    Vector contact_normal_vec = contact_normal(a, b);
+    float p_depth = penetration_depth(a, b);
+    Vector unpenetrate_a = undo_penetration_vec(a.get_mass(), b.get_mass(), p_depth, -contact_normal_vec);
+    Vector unpenetrate_b = undo_penetration_vec(b.get_mass(), a.get_mass(), p_depth, contact_normal_vec);
+    a.move(unpenetrate_a.x, unpenetrate_a.y);
+    b.move(unpenetrate_b.x, unpenetrate_b.y);
+}
+
 void resolve_interpenetration(Circle &circle, WindowSize &window, Direction &wall_direction)
 {
     Vector contact_normal = border_contact_normal(wall_direction);
-    float d = penetration_depth(circle, window, wall_direction);
-    Vector move_vector = -contact_normal * d;
+    float p_depth = penetration_depth(circle, window, wall_direction);
+    Vector move_vector = -contact_normal * p_depth;
     std::cout << "before pen resolution: " << circle.get_position() << "\n";
     circle.move(move_vector.x, move_vector.y);
     std::cout << "after pen resolution: " << circle.get_position() << "\n";
@@ -106,12 +128,12 @@ void resolve_collision(Circle &a, Circle &b)
     auto impulse_vector = calc_impulse_vector(contact_normal_vec, impulse_strength);
     apply_impulse_to_velocity(a, impulse_vector);
     apply_impulse_to_velocity(b, impulse_vector, true);
+    resolve_interpenetration(a, b);
 }
 
-
-void resolve_border_collision(Circle &circle, Direction &border_direction, WindowSize& window)
+void resolve_border_collision(Circle &circle, Direction &border_direction, WindowSize &window)
 {
-    float c = 0.3;
+    float c = 1;
     Object border;
     Vector contact_normal_vec = border_contact_normal(border_direction);
     float closing_vel = closing_velocity(circle, border, contact_normal_vec);
