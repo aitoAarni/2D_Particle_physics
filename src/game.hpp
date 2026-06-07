@@ -11,26 +11,32 @@
 class Game
 {
     Display display;
+    WindowSize window_size;
     Circles circles;
 
 public:
-    Game(int width, int height) : display(width, height) {}
+    Game(int width, int height) : display(width, height), window_size(width, height) {}
 
     void initialize_game()
     {
-        circles.add_circle(Circle(2000, 500, 50, -3, 0, 2));
-        circles.add_circle(Circle(500, 1000, 50, 0, -1, 2));
-        }
+        circles.add_circle(Circle(1000, 500, 50, -3, 0, 2));
+        circles.add_circle(Circle(500, 700, 50, 0, -1, 2));
+    }
 
     void handle_collisions()
     {
-        for (int a_index = 0; a_index <= circles.get_circles().size(); a_index++)
+        for (int a_index = 0; a_index < circles.get_circles().size(); a_index++)
         {
             for (int b_index = a_index + 1; b_index <= circles.get_circles().size(); b_index++)
             {
                 if (collision_detection(circles[a_index], circles[b_index]))
                     resolve_collision(circles[a_index], circles[b_index]);
             }
+            Direction border = border_collision(circles[a_index], window_size);
+            std::cout << "collision direction: " << static_cast<int>(border) << "\n";
+            if (border == Direction::Undefined)
+                continue;
+            
         }
     }
 
