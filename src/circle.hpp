@@ -5,18 +5,18 @@
 #include <iostream>
 #include <format>
 #include "structs.hpp"
+#include "object.hpp"
 
-class Circle
+class Circle : public Object
 {
-    Vector velocity;
-    float weight;
     float x;
     float y;
     float radius;
+    float weight;
 
 public:
     Circle(float x_initial, float y_initial, float r, float x_vel = 5, float y_vel = 5, float w = 2)
-        : x(x_initial), y(y_initial), radius(r), velocity(x_vel, y_vel), weight(w) {}
+        : Object(x_vel, y_vel), x(x_initial), y(y_initial), radius(r), weight(w) {}
 
     void move()
     {
@@ -39,10 +39,6 @@ public:
     {
         return weight;
     }
-    Vector &get_velocity()
-    {
-        return velocity;
-    }
     void set_y(float new_y)
     {
         y = new_y;
@@ -58,11 +54,6 @@ public:
     void set_weight(float w)
     {
         weight = w;
-    }
-    void set_velocity(Vector vel)
-    {
-        std::cout << "old vel: " << velocity << ", new_vel: " << vel << "\n";
-        velocity = vel;
     }
 };
 

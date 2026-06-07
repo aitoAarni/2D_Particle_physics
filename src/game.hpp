@@ -32,11 +32,10 @@ public:
                 if (collision_detection(circles[a_index], circles[b_index]))
                     resolve_collision(circles[a_index], circles[b_index]);
             }
-            Direction border = border_collision(circles[a_index], window_size);
-            std::cout << "collision direction: " << static_cast<int>(border) << "\n";
-            if (border == Direction::Undefined)
+            Direction border_direction = border_collision(circles[a_index], window_size);
+            if (border_direction == Direction::Undefined)
                 continue;
-            
+            resolve_border_collision(circles[a_index], border_direction);
         }
     }
 
