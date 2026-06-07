@@ -12,11 +12,12 @@ class Circle : public Object
     float x;
     float y;
     float radius;
-    float weight;
+    float mass;
+    float inverse_mass;
 
 public:
-    Circle(float x_initial, float y_initial, float r, float x_vel = 5, float y_vel = 5, float w = 2)
-        : Object(x_vel, y_vel), x(x_initial), y(y_initial), radius(r), weight(w) {}
+    Circle(float x_initial, float y_initial, float r, float x_vel = 5, float y_vel = 5, float m = 2)
+        : Object(x_vel, y_vel), x(x_initial), y(y_initial), radius(r), mass(m), inverse_mass(1 / m) {}
 
     void move()
     {
@@ -35,10 +36,15 @@ public:
     {
         return radius;
     }
-    float get_weight() const
+    float get_mass() const
     {
-        return weight;
+        return mass;
     }
+    float get_inverse_mass() const
+    {
+        return inverse_mass;
+    }
+
     void set_y(float new_y)
     {
         y = new_y;
@@ -49,11 +55,20 @@ public:
     }
     void set_radius(float r)
     {
+        if (r < 0)
+        {
+            throw std::runtime_error("Radius can't be set to non-positive numbers");
+        }
         radius = radius;
     }
-    void set_weight(float w)
+    void set_mass(float m)
     {
-        weight = w;
+        if (m <= 0)
+        {
+            throw std::runtime_error("Mass can't be set to non-positive numbers");
+        }
+        mass = m;
+        inverse_mass = 1 / m;
     }
 };
 

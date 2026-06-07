@@ -27,14 +27,14 @@ float change_in_velocity(float velocity_before, float c)
     return -velocity_before * (1 + c);
 }
 
-float scalar_impulse(float velocity_change, float mass_a, float mass_b)
+float scalar_impulse(float velocity_change, float inverse_mass_a, float inverse_mass_b)
 {
-    return velocity_change / (1 / mass_a + 1 / mass_b);
+    return velocity_change /  (inverse_mass_a + inverse_mass_b);
 }
 
-float scalar_impulse(float velocity_change, float mass_a)
+float scalar_impulse(float velocity_change, float inverse_mass)
 {
-    return velocity_change / (1 / mass_a);
+    return velocity_change / inverse_mass;
 }
 
 Vector calc_impulse_vector(Vector &contact_normal, float scalar_impulse)
@@ -46,7 +46,7 @@ void apply_impulse_to_velocity(Circle &circle, Vector &impulse_vector, bool reve
 {
     if (reverse_direction)
         impulse_vector = -impulse_vector;
-    auto impulse_divided_by_mass = (impulse_vector * (1 / circle.get_weight()));
+    auto impulse_divided_by_mass = impulse_vector * circle.get_inverse_mass();
     auto resolution_velocity = circle.get_velocity() + impulse_divided_by_mass;
     std::cout << "new_velocity: " << resolution_velocity << "\n";
     circle.set_velocity(resolution_velocity);
@@ -55,11 +55,11 @@ void apply_impulse_to_velocity(Circle &circle, Vector &impulse_vector, bool reve
 void resolve_collision(Circle &a, Circle &b)
 {
     // coefficient of restitution
-    float c = 1;
+    float c =0.9;
     auto contact_normal_vec = contact_normal(a, b);
     auto closing_vel = closing_velocity(a, b, contact_normal_vec);
     auto velocity_change = change_in_velocity(closing_vel, c);
-    float impulse_strength = scalar_impulse(velocity_change, a.get_weight(), b.get_weight());
+    float impulse_strength = scalar_impulse(velocity_change, a.get_inverse_mass(), b.get_inverse_mass());
     std::cout << "impulse strength: " << impulse_strength << "\n";
     auto impulse_vector = calc_impulse_vector(contact_normal_vec, impulse_strength);
     std::cout << "impulse_vector: " << impulse_vector << "\n";
@@ -86,12 +86,12 @@ Vector border_contact_normal(Direction &border)
 
 void resolve_border_collision(Circle &circle, Direction &border_direction)
 {
-    float c = 1;
+    float c = 1.1;
     Object border;
     Vector contact_normal_vec = border_contact_normal(border_direction);
     float closing_vel = closing_velocity(circle, border, contact_normal_vec);
     float velocity_change = change_in_velocity(closing_vel, c);
-    float impulse_strength = scalar_impulse(velocity_change, circle.get_weight());
+    float impulse_strength = scalar_impulse(velocity_change, circle.get_inverse_mass());
     Vector impulse_vector = calc_impulse_vector(contact_normal_vec, impulse_strength);
     apply_impulse_to_velocity(circle, impulse_vector);
 }

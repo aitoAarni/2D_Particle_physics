@@ -19,8 +19,31 @@ public:
 
     void initialize_game()
     {
-        circles.add_circle(Circle(1000, 500, 50, -3, 0, 2));
-        circles.add_circle(Circle(500, 700, 50, 0, -1, 2));
+        circles.add_circle(Circle(1000, 500, 5, -1, -2, 1));
+        circles.add_circle(Circle(900, 200, 5, 0, -2, 3));
+        circles.add_circle(Circle(800, 300, 5, -2, -2, 8));
+        circles.add_circle(Circle(700, 500, 5, 1, -2, 2));
+        circles.add_circle(Circle(600, 1000, 5, 2, -2, 5));
+        circles.add_circle(Circle(500, 1000, 5, 2, -2, 5));
+        circles.add_circle(Circle(400, 1000, 5, 2, -2, 5));
+        circles.add_circle(Circle(300, 1000, 5, 2, -2, 5));
+        circles.add_circle(Circle(200, 1000, 5, 2, -2, 5));
+        circles.add_circle(Circle(100, 800, 5, 2, -2, 5));
+        circles.add_circle(Circle(100, 900, 5, 2, -2, 5));
+        circles.add_circle(Circle(100, 700, 5, 2, -2, 50));
+        circles.add_circle(Circle(100, 600, 5, 2, -2, 2));
+        circles.add_circle(Circle(100, 500, 5, 2, -2, 1));
+        circles.add_circle(Circle(100, 400, 5, 2, -2, 1));
+        circles.add_circle(Circle(900, 410, 5, 2, -2, 1));
+        circles.add_circle(Circle(190, 420, 5, 2, -2, 8));
+        circles.add_circle(Circle(180, 430, 5, 2, -2, 2));
+        circles.add_circle(Circle(170, 440, 5, 2, -2, 3));
+        circles.add_circle(Circle(160, 450, 5, 2, -2, 5));
+        circles.add_circle(Circle(150, 460, 5, 2, -2, 5));
+        circles.add_circle(Circle(140, 470, 5, 2, -2, 5));
+        circles.add_circle(Circle(130, 480, 5, 2, -2, 7));
+        circles.add_circle(Circle(120, 490, 5, 2, -2, 5));
+        circles.add_circle(Circle(110, 400, 5, 2, -2, 5));
     }
 
     void handle_collisions()
@@ -60,7 +83,7 @@ public:
             display.draw_background();
             display.draw_circles(circles);
             display.draw_changes();
-            std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(7));
+            std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(3));
         }
     }
 };
