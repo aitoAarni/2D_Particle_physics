@@ -9,28 +9,35 @@
 
 class Circle : public Object
 {
-    float x;
-    float y;
+    Vector position;
     float radius;
     float mass;
     float inverse_mass;
 
 public:
     Circle(float x_initial, float y_initial, float r, float x_vel = 5, float y_vel = 5, float m = 2)
-        : Object(x_vel, y_vel), x(x_initial), y(y_initial), radius(r), mass(m), inverse_mass(1 / m) {}
+        : Object(x_vel, y_vel), position(x_initial, y_initial), radius(r), mass(m), inverse_mass(1 / m) {}
 
     void move()
     {
-        x += velocity.x;
-        y += velocity.y;
+        position.x += velocity.x;
+        position.y += velocity.y;
+    }
+    void move(float delta_x, float delta_y)
+    {
+        position.x += delta_x;
+        position.y += delta_y;
+    }
+    Vector& get_position() {
+        return position;
     }
     float get_x() const
     {
-        return x;
+        return position.x;
     }
     float get_y() const
     {
-        return y;
+        return position.y;
     }
     float get_radius() const
     {
@@ -47,11 +54,11 @@ public:
 
     void set_y(float new_y)
     {
-        y = new_y;
+        position.y = new_y;
     }
     void set_x(float new_x)
     {
-        x = new_x;
+        position.x = new_x;
     }
     void set_radius(float r)
     {
@@ -70,6 +77,7 @@ public:
         mass = m;
         inverse_mass = 1 / m;
     }
+
 };
 
 class Circles

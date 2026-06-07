@@ -19,31 +19,31 @@ public:
 
     void initialize_game()
     {
-        circles.add_circle(Circle(1000, 500, 5, -1, -2, 1));
-        circles.add_circle(Circle(900, 200, 5, 0, -2, 3));
-        circles.add_circle(Circle(800, 300, 5, -2, -2, 8));
-        circles.add_circle(Circle(700, 500, 5, 1, -2, 2));
-        circles.add_circle(Circle(600, 1000, 5, 2, -2, 5));
-        circles.add_circle(Circle(500, 1000, 5, 2, -2, 5));
-        circles.add_circle(Circle(400, 1000, 5, 2, -2, 5));
-        circles.add_circle(Circle(300, 1000, 5, 2, -2, 5));
-        circles.add_circle(Circle(200, 1000, 5, 2, -2, 5));
-        circles.add_circle(Circle(100, 800, 5, 2, -2, 5));
-        circles.add_circle(Circle(100, 900, 5, 2, -2, 5));
-        circles.add_circle(Circle(100, 700, 5, 2, -2, 50));
-        circles.add_circle(Circle(100, 600, 5, 2, -2, 2));
-        circles.add_circle(Circle(100, 500, 5, 2, -2, 1));
-        circles.add_circle(Circle(100, 400, 5, 2, -2, 1));
-        circles.add_circle(Circle(900, 410, 5, 2, -2, 1));
-        circles.add_circle(Circle(190, 420, 5, 2, -2, 8));
-        circles.add_circle(Circle(180, 430, 5, 2, -2, 2));
-        circles.add_circle(Circle(170, 440, 5, 2, -2, 3));
-        circles.add_circle(Circle(160, 450, 5, 2, -2, 5));
-        circles.add_circle(Circle(150, 460, 5, 2, -2, 5));
-        circles.add_circle(Circle(140, 470, 5, 2, -2, 5));
-        circles.add_circle(Circle(130, 480, 5, 2, -2, 7));
-        circles.add_circle(Circle(120, 490, 5, 2, -2, 5));
-        circles.add_circle(Circle(110, 400, 5, 2, -2, 5));
+        circles.add_circle(Circle(170, 500, 50, -80, 0, 1));
+        // circles.add_circle(Circle(900, 200, 5, 0, -2, 3));
+        // circles.add_circle(Circle(800, 300, 5, -2, -2, 8));
+        // circles.add_circle(Circle(700, 500, 5, 1, -2, 2));
+        // circles.add_circle(Circle(600, 1000, 5, 2, -2, 5));
+        // circles.add_circle(Circle(500, 1000, 5, 2, -2, 5));
+        // circles.add_circle(Circle(400, 1000, 5, 2, -2, 5));
+        // circles.add_circle(Circle(300, 1000, 5, 2, -2, 5));
+        // circles.add_circle(Circle(200, 1000, 5, 2, -2, 5));
+        // circles.add_circle(Circle(100, 800, 5, 2, -2, 5));
+        // circles.add_circle(Circle(100, 900, 5, 2, -2, 5));
+        // circles.add_circle(Circle(100, 700, 5, 2, -2, 50));
+        // circles.add_circle(Circle(100, 600, 5, 2, -2, 2));
+        // circles.add_circle(Circle(100, 500, 5, 2, -2, 1));
+        // circles.add_circle(Circle(100, 400, 5, 2, -2, 1));
+        // circles.add_circle(Circle(900, 410, 5, 2, -2, 1));
+        // circles.add_circle(Circle(190, 420, 5, 2, -2, 8));
+        // circles.add_circle(Circle(180, 430, 5, 2, -2, 2));
+        // circles.add_circle(Circle(170, 440, 5, 2, -2, 3));
+        // circles.add_circle(Circle(160, 450, 5, 2, -2, 5));
+        // circles.add_circle(Circle(150, 460, 5, 2, -2, 5));
+        // circles.add_circle(Circle(140, 470, 5, 2, -2, 5));
+        // circles.add_circle(Circle(130, 480, 5, 2, -2, 7));
+        // circles.add_circle(Circle(120, 490, 5, 2, -2, 5));
+        // circles.add_circle(Circle(110, 400, 5, 2, -2, 5));
     }
 
     void handle_collisions()
@@ -58,7 +58,7 @@ public:
             Direction border_direction = border_collision(circles[a_index], window_size);
             if (border_direction == Direction::Undefined)
                 continue;
-            resolve_border_collision(circles[a_index], border_direction);
+            resolve_border_collision(circles[a_index], border_direction, window_size);
         }
     }
 
@@ -67,6 +67,7 @@ public:
         display.initialize();
         bool isRunning = true;
         SDL_Event event;
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
         while (isRunning)
         {
 
@@ -83,7 +84,7 @@ public:
             display.draw_background();
             display.draw_circles(circles);
             display.draw_changes();
-            std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(3));
+            std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(1000));
         }
     }
 };
