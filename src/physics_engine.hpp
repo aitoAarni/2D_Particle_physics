@@ -46,6 +46,10 @@ public:
         circles.add_circle(Circle(510, 400, r, 2, -2, 5));
     }
 
+    Circles& get_circles() {
+        return circles;
+    }  
+
     void handle_collisions()
     {
         for (int a_index = 0; a_index < circles.get_circles().size(); a_index++)
@@ -77,8 +81,8 @@ public:
                 }
             }
             auto frame_start = std::chrono::steady_clock::now();
-            circles.move();
-            handle_collisions();
+            // circles.move();
+            // handle_collisions();
             std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(3));
         }
     }

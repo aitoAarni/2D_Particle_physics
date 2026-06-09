@@ -3,6 +3,7 @@
 #include "physics_engine.hpp"
 #include <atomic>
 #include "display.hpp"
+#include <thread>
 
 int main(int argc, char *args[])
 {
@@ -14,7 +15,9 @@ int main(int argc, char *args[])
     simulation.initialize_game();
     display.initialize();
         
+    std::jthread display_thread(&Display::start_display, &display, std::ref(simulation.get_circles()), std::ref(is_running), 144);
     simulation.loop(128, is_running);
+    display_thread.join();
 
     return 0;
 }

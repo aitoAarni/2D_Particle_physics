@@ -39,14 +39,21 @@ public:
         SDL_Quit();
     }
 
-    void display_loop(int fps = 144, Circles& circles, std::atomic<bool>& is_running)
+    
+    void start_display(Circles& circles, std::atomic<bool>& is_running, int fps = 144) {
+        initialize();
+        display_loop(circles, is_running, fps);
+    }
+    
+    void display_loop(Circles& circles, std::atomic<bool>& is_running, int fps = 144)
     {
         std::chrono::microseconds frame_time{1'000'000 / fps};
-        while (is_running.load(std::memory_order_relaxed)) {
+        while (is_running.load()) {
             auto frame_start = std::chrono::steady_clock().now();
             draw_background();
             draw_circles(circles);
             draw_changes();
+            std::cout << "frame time: " << "\n";
             std::this_thread::sleep_until(frame_start + frame_time);
         }
     }
