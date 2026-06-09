@@ -1,5 +1,9 @@
 # Physics Sandbox
 
+## Video Demo of the Engine
+[Screencast from 2026-06-09 21-28-42.webm](https://github.com/user-attachments/assets/f3cdaf1f-fd50-4e9a-9cb9-794031dd1291)
+
+
 A custom 2D particle simulation and physics engine built from scratch in C++23. 
 
 ## Dependencies
