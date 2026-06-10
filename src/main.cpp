@@ -13,7 +13,6 @@ int main(int argc, char *args[])
 
     std::atomic<bool> is_running {true};
     simulation.initialize_game();
-    display.initialize();
         
     std::jthread display_thread(&Display::start_display, &display, std::ref(simulation.get_circles()), std::ref(is_running), 144);
     simulation.loop(128, is_running);
