@@ -66,10 +66,11 @@ public:
         }
     }
 
-    void loop(int tick_rate, std::atomic<bool>& is_running)
+    void loop(int tick_rate, std::atomic<bool>& is_running, int ticks_rate = 128)
     {
         SDL_Event event;
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        auto tick_dealy = std::chrono::milliseconds(1'000'000 / tick_rate);
         while (is_running)
         {
 
@@ -81,8 +82,9 @@ public:
                 }
             }
             auto frame_start = std::chrono::steady_clock::now();
-            // circles.move();
-            // handle_collisions();
+            circles.move();
+            handle_collisions();
+            circles.update_complete();
             std::this_thread::sleep_until(frame_start + std::chrono::milliseconds(3));
         }
     }

@@ -6,6 +6,8 @@
 #include <format>
 #include "structs.hpp"
 #include "object.hpp"
+#include <atomic>
+
 
 class Circle : public Object
 {
@@ -14,12 +16,14 @@ class Circle : public Object
     float mass;
     float inverse_mass;
 
+
 public:
     Circle(float x_initial, float y_initial, float r, float x_vel = 5, float y_vel = 5, float m = 2)
         : Object(x_vel, y_vel), position(x_initial, y_initial), radius(r), mass(m), inverse_mass(1 / m) {}
 
     void move()
     {
+
         position.x += velocity.x;
         position.y += velocity.y;
     }
@@ -83,14 +87,18 @@ public:
 class Circles
 {
     std::vector<Circle> circles;
-
+    std::atomic<bool> updating_circles;
 public:
     Circles() = default;
-    Circles(std::initializer_list<Circle> l) : circles(l) {}
+    Circles(std::initializer_list<Circle> l) : circles(l), updating_circles(false) {}
 
     void add_circle(Circle obj)
     {
         circles.push_back(obj);
+    }
+
+    bool is_updating() {
+        return updating_circles;
     }
 
     const std::vector<Circle> &get_circles()
@@ -102,11 +110,17 @@ public:
     {
         return circles[index];
     }
+
     void move()
     {
+        updating_circles.store(true);
         for (Circle &circle : circles)
         {
             circle.move();
         }
+    }
+
+    void update_complete() {
+        updating_circles.store(false);
     }
 };

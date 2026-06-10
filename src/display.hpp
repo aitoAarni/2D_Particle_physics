@@ -31,7 +31,7 @@ class Display
     SDL_Renderer *renderer = nullptr;
 
 public:
-    Display(WindowSize& window_size) : width(window_size.width), height(window_size.height) {}
+    Display(WindowSize &window_size) : width(window_size.width), height(window_size.height) {}
     ~Display()
     {
         SDL_DestroyRenderer(renderer);
@@ -39,17 +39,20 @@ public:
         SDL_Quit();
     }
 
-    
-    void start_display(Circles& circles, std::atomic<bool>& is_running, int fps = 144) {
+    void start_display(Circles &circles, std::atomic<bool> &is_running, int fps = 144)
+    {
         initialize();
         display_loop(circles, is_running, fps);
     }
-    
-    void display_loop(Circles& circles, std::atomic<bool>& is_running, int fps = 144)
+
+    void display_loop(Circles &circles, std::atomic<bool> &is_running, int fps = 144)
     {
         std::chrono::microseconds frame_time{1'000'000 / fps};
-        while (is_running.load()) {
+        while (is_running.load())
+        {
             auto frame_start = std::chrono::steady_clock().now();
+            if (circles.is_updating())
+                continue;
             draw_background();
             draw_circles(circles);
             draw_changes();
